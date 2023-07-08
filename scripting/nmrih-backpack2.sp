@@ -590,7 +590,7 @@ enum struct Backpack
 	{
 		ArrayList arr = this.items[col];
 
-		int fullCapacity = RoundToNearest(reg.capacity * cvAmmoMultiplier.FloatValue);
+		int fullCapacity = RoundToNearest(reg.capacity * cvAmmoMultiplier.FloatValue) * 2; // allows 8 ammo boxes instead of 4 per slot
 		if (fullCapacity <= 0) {
 			fullCapacity = cellmax;
 		}
@@ -977,13 +977,13 @@ public void OnPluginStart()
 		"Lower values result in more accurate hints but increase CPU usage");
 	cvHintsInterval.AddChangeHook(OnHintsIntervalCvarChanged);
 
-	cvAmmoMultiplier = AutoExecConfig_CreateConVar("sm_backpack_ammo_stack_limit", "4",
+	cvAmmoMultiplier = AutoExecConfig_CreateConVar("sm_backpack_ammo_stack_limit", "8", // only works if line 593 is adjusted too
 		"Number of ammo pickups that can be stored per ammo slot. 0 means infinite.");
 
 	cvMaxStarterBackpacks = AutoExecConfig_CreateConVar("sm_backpack_count", "1",
 	 "Number of backpacks to create at round start. Won't create more backpacks than there are players.");
 
-	cvBackpackColorize = AutoExecConfig_CreateConVar("sm_backpack_colorize", "1",
+	cvBackpackColorize = AutoExecConfig_CreateConVar("sm_backpack_colorize", "0", // optional, if used with 1 bag only spawn, the bag will always glow green
 	 "Randomly colorize backpacks to help distinguish them.");
 	cvBackpackColorize.AddChangeHook(OnColorizeCvarChanged);
 
@@ -993,7 +993,7 @@ public void OnPluginStart()
 	cvBlink = AutoExecConfig_CreateConVar("sm_backpack_blink", "0", "Whether dropped backpacks pulse their brightness");
 	cvBlink.AddChangeHook(OnBlinkCvarChanged);
 
-	cvNpcBackpackChance = AutoExecConfig_CreateConVar("sm_backpack_zombie_spawn_chance", "0.005",
+	cvNpcBackpackChance = AutoExecConfig_CreateConVar("sm_backpack_zombie_spawn_chance", "0", // setting to 0 only works if line 1343 is adjusted too
 	 "Chance for a zombie to spawn with a backpack. Set to zero or negative to disable");
 
 	AutoExecConfig_ExecuteFile();
@@ -1340,7 +1340,7 @@ Action OnAmmoBoxUse(int ammobox, int activator, int caller, UseType type, float 
 public void MakeLootZombie(int zombie)
 {
 	float rnd = GetURandomFloat();
-	if (rnd <= cvNpcBackpackChance.FloatValue)
+	if (1 <= cvNpcBackpackChance.FloatValue) // change "rnd" to "1" to allow only 1 backpack per round, required to disable zombie loot spawns
 	{
 		Backpack bp;
 		bp.Init(TEMPLATE_RANDOM);
