@@ -1,3 +1,16 @@
+# Fork Info
+This fork includes a few adjustments to nmrih-backpack2.sp for version 2.0.18
+
+line 593: int fullCapacity = RoundToNearest(reg.capacity * cvAmmoMultiplier.FloatValue) * 2; // allows 8 ammo boxes instead of 4 per slot
+
+line 980: cvAmmoMultiplier = AutoExecConfig_CreateConVar("sm_backpack_ammo_stack_limit", "8", // only works if line 593 is adjusted too
+
+line 986: cvBackpackColorize = AutoExecConfig_CreateConVar("sm_backpack_colorize", "0", // optional, if used with 1 bag only spawn, the bag will always glow green
+
+line 996: cvNpcBackpackChance = AutoExecConfig_CreateConVar("sm_backpack_zombie_spawn_chance", "0", // setting to 0 only works if line 1343 is adjusted too
+
+line 1343: if (1 <= cvNpcBackpackChance.FloatValue) // change "rnd" to "1" to allow only 1 backpack per round, required to disable zombie loot spawns
+
 # [NMRiH] Backpack 2
 This is a complete rewrite of [Backpack by Ryan](https://forums.alliedmods.net/showthread.php?t=308217) with added features and bug fixes.
 
